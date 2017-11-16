@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PropertyExpansionTest", "PropertyExpansionTest.csproj", "{74CA52E9-9EBA-4008-B366-1943B0ECE117}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NP.Paradigms.Attrs", "..\NP.Paradigms.Attrs\NP.Paradigms.Attrs.csproj", "{B3E6F51C-367E-43D5-828E-BE41B788F0C0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{74CA52E9-9EBA-4008-B366-1943B0ECE117}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74CA52E9-9EBA-4008-B366-1943B0ECE117}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74CA52E9-9EBA-4008-B366-1943B0ECE117}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3E6F51C-367E-43D5-828E-BE41B788F0C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3E6F51C-367E-43D5-828E-BE41B788F0C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3E6F51C-367E-43D5-828E-BE41B788F0C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3E6F51C-367E-43D5-828E-BE41B788F0C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
