@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace NP.Paradigms.Attrs
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    class PostNotifiablePropertyAttribute : Attribute
+    public class PostNotifiablePropertyAttribute : Attribute
     {
     }
 }
