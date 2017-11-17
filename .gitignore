@@ -27,3 +27,6 @@
 /PropertyExpansionTest/bin/Debug
 /TestPropertyExpansionProject/.vs/TestPropertyExpansionProject/v15/sqlite3
 *.suo
+*.ide
+*.cache
+/IntellisenseUI/obj/Debug
