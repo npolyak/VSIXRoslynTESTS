@@ -26,6 +26,9 @@ namespace MyIntellisenseTest1
             ReadOnlyObservableCollection<CompletionSet> completionSets =
                 completionSession.CompletionSets;
 
+            IEnumerable<Completion>
+                allCompletions = completionSets.SelectMany(completionSet => completionSet.Completions);
+
             return new MyIntellisensePresenterUI(completionSession);
         }
     }
