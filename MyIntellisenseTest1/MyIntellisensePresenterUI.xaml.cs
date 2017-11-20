@@ -130,7 +130,7 @@ namespace MyIntellisenseTest1
 
             InitializeComponent();
 
-            SelectItemBasedOnFiltering();
+            SelectItemBasedOnTextFiltering();
 
             this.AddHandler
             (
@@ -209,7 +209,7 @@ namespace MyIntellisenseTest1
             TheCompletionsCollectionView.MoveCurrentTo(completionItem);
         }
 
-        void SelectItemBasedOnFiltering()
+        void SelectItemBasedOnTextFiltering()
         {
             string userText = UserText;
 
@@ -270,7 +270,7 @@ namespace MyIntellisenseTest1
         {
             TheCompletionsCollectionView.Refresh();
 
-            SelectItemBasedOnFiltering();
+            SelectItemBasedOnTextFiltering();
         }
 
         public bool ExecuteKeyboardCommand(IntellisenseKeyboardCommand command)
