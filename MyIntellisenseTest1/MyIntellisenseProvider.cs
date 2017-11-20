@@ -9,12 +9,13 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace MyIntellisenseTest1
 {
     [Export(typeof(IIntellisensePresenterProvider))]
     [ContentType("XAML")]
-    [ContentType("CSharp")]
+    //[ContentType("CSharp")]
     [Order(Before = "default")]
     [Name("My Intellisense Presenter")]
     public class MyIntellisenseProvider : IIntellisensePresenterProvider
@@ -26,8 +27,14 @@ namespace MyIntellisenseTest1
             ReadOnlyObservableCollection<CompletionSet> completionSets =
                 completionSession.CompletionSets;
 
-            IEnumerable<Completion>
+            if (completionSets == null)
+                return null;
+
+            IEnumerable<Completion> 
                 allCompletions = completionSets.SelectMany(completionSet => completionSet.Completions);
+
+            if (allCompletions.Count() == 0)
+                return null;
 
             return new MyIntellisensePresenterUI(completionSession);
         }

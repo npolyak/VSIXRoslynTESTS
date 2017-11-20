@@ -5,9 +5,73 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MyIntellisenseTest1"
              mc:Ignorable="d" 
-             Width="300"
-             Height="300">
-    <Grid Background="Red">
-
+             Focusable="False">
+    <Grid>
+        <Grid x:Name="TheCompletionsGrid"
+              HorizontalAlignment="Left"
+              VerticalAlignment="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <ListView x:Name="TheCompletionsListView"
+                      ItemsSource="{Binding Path=TheCompletionsCollectionView, 
+                                            RelativeSource={RelativeSource AncestorType=UserControl}}"
+                      IsSynchronizedWithCurrentItem="True"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Top"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                      Width="300"
+                      Height="200">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="Padding"
+                                Value="0"/>
+                        <Setter Property="Focusable"
+                                Value="False"/>
+                        <Setter Property="local:ResendEventBehavior.TheResendEventBehavior">
+                            <Setter.Value>
+                                <local:ResendEventBehavior TheRoutedEvent="{x:Static FrameworkElement.MouseDownEvent}"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0,1,0,1"
+                              Background="Transparent">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Source="{Binding Path=IconSource}"
+                                   Margin="2,0,5,0"/>
+                            <TextBlock Text="{Binding Path=DisplayText}" 
+                                       Grid.Column="1"
+                                       Margin="0,0,20,0"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListView>
+            <ItemsControl x:Name="TheFiltersPane"
+                          Focusable="False"
+                          Grid.Row="1"
+                          HorizontalAlignment="Left"
+                          VerticalAlignment="Center"
+                          ItemsSource="{Binding Path=TheCompletionFilters, 
+                                                RelativeSource={RelativeSource AncestorType=UserControl}}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox IsChecked="{Binding Path=IsOn, 
+                                                      Mode=TwoWay}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
     </Grid>
 </UserControl>

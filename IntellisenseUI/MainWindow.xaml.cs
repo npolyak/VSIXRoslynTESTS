@@ -20,9 +20,30 @@ namespace IntellisenseUI
     /// </summary>
     public partial class MainWindow : Window
     {
+        public CompletionViewModel TheVM { get; } =
+            new CompletionViewModel();
+
         public MainWindow()
         {
+            var testCompletions = new CompletionsTestCollectionVM();
+
+            foreach(CompletionVM completionVM in testCompletions)
+            {
+                TheVM.TheCompletions.Add(completionVM);
+            }
+
+            TheVM.TheCollectionView.Refresh();
+
+            this.DataContext = TheVM;
+
             InitializeComponent();
+        }
+
+        public void ScrollIntoView()
+        {
+            TheCompletionsList.ScrollIntoView(TheCompletionsList.SelectedItem);
+
+            TheCompletionsList.Focus();
         }
     }
 }

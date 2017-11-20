@@ -5,8 +5,56 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:IntellisenseUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow">
     <Grid>
-        
+        <Grid x:Name="TheCompletionsGrid" 
+              HorizontalAlignment="Left"
+              VerticalAlignment="Top"
+              Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TextBox Text="{Binding Path=TheStringToComplete, 
+                                    Mode=TwoWay,
+                                    UpdateSourceTrigger=PropertyChanged}"
+                     HorizontalAlignment="Stretch"
+                     Height="20"
+                     Margin="5"/>
+            <ListView x:Name="TheCompletionsList"
+                      Grid.Row="1"
+                      ItemsSource="{Binding Path=TheCollectionView}"
+                      IsSynchronizedWithCurrentItem="True"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Top"
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                      Width="300"
+                      Height="70">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Path=Text}"
+                                   Margin="5,3,20,3"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <ItemsControl x:Name="TheFiltersPane"
+                          Grid.Row="2"
+                          HorizontalAlignment="Left"
+                          VerticalAlignment="Center"
+                          ItemsSource="{Binding Path=TheFilters}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox IsChecked="{Binding Path=IsOn, 
+                                                      Mode=TwoWay}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
     </Grid>
 </Window>
