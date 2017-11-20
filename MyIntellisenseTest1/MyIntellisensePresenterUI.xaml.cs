@@ -110,6 +110,7 @@ namespace MyIntellisenseTest1
             (
                 allCompletions
                 .GroupBy(compl => compl.IconAutomationText)
+                .Where(groupItem => groupItem.Key != "9") // completion tag (gets automatically added)
                 .Select(groupItem => new CompletionFilter(groupItem.Key, groupItem.First().IconSource.Clone()))
             );
 
@@ -131,7 +132,7 @@ namespace MyIntellisenseTest1
                 ResendEventBehavior.CustomEvent, 
                 (RoutedEventHandler) TheCompletionsListView_MouseDown
             );
-            //TheCompletionsListView.MouseDown += TheCompletionsListView_MouseDown;
+
             TheCompletionsListView.MouseDoubleClick += TheCompletionsListView_MouseDoubleClick;
         }
 
@@ -272,16 +273,16 @@ namespace MyIntellisenseTest1
             switch (command)
             {
                 case IntellisenseKeyboardCommand.Up:
-                    SelectCompletion(-1);
+                    MoveCompletionByIdx(-1);
                     return true;
                 case IntellisenseKeyboardCommand.PageUp:
-                    SelectCompletion(-10);
+                    MoveCompletionByIdx(-10);
                     return true;
                 case IntellisenseKeyboardCommand.Down:
-                    SelectCompletion(1);
+                    MoveCompletionByIdx(1);
                     return true;
                 case IntellisenseKeyboardCommand.PageDown:
-                    SelectCompletion(10);
+                    MoveCompletionByIdx(10);
                     return true;
                 case IntellisenseKeyboardCommand.Escape:
                     if (!this.Session.IsDismissed)
@@ -292,7 +293,7 @@ namespace MyIntellisenseTest1
             }
         }
 
-        private void SelectCompletion(int relativeIndex)
+        private void MoveCompletionByIdx(int relativeIndex)
         {
             int newPosition = TheCompletionsCollectionView.CurrentPosition + relativeIndex;
 
