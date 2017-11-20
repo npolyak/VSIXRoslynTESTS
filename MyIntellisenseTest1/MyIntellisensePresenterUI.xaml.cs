@@ -114,6 +114,11 @@ namespace MyIntellisenseTest1
                 .Select(groupItem => new CompletionFilter(groupItem.Key, groupItem.First().IconSource.Clone()))
             );
 
+            if (TheCompletionFilters.Count == 1)
+            {
+                TheCompletionFilters.Clear();
+            }
+
             foreach(CompletionFilter filter in TheCompletionFilters)
             {
                 filter.PropertyChanged += Filter_PropertyChanged;
