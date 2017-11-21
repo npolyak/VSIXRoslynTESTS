@@ -47,3 +47,7 @@
 /NP.XAMLIntellisenseExtensionForVS2017/bin/Debug/Microsoft.VisualStudio.CoreUtility.dll
 *.vsix
 /NP.XAMLIntellisenseExtensionForVS2017/obj/Debug
+/NP.XAMLIntellisenseExtensionForVS2017/.vs/NP.XAMLIntellisenseExtensionForVS2017/v15/sqlite3
+/NP.XAMLIntellisenseExtensionForVS2017/bin/Release
+/NP.XAMLIntellisenseExtensionForVS2017/obj/Release
+/NP.XAMLIntellisenseExtensionForVS2017/.vs/NP.XAMLIntellisenseExtensionForVS2017/v15/Server/sqlite3

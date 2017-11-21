@@ -3,7 +3,7 @@
     <Metadata>
         <Identity Id="NP.XAMLIntellisenseExtensionForVS2017.9c3d92c1-cbae-4738-a2f2-1e48eab3f15a" Version="1.0" Language="en-US" Publisher="Nick Polyak" />
         <DisplayName>NP.XAMLIntellisenseExtensionForVS2017</DisplayName>
-        <Description>Empty VSIX Project.</Description>
+        <Description xml:space="preserve">VS 2017 XAML intellisense extension with type filtersV</Description>
     </Metadata>
     <Installation>
         <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0]" />
