@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="MyIntellisenseTest1.9c3d92c1-cbae-4738-a2f2-1e48eab3f15a" Version="1.0" Language="en-US" Publisher="Nick Polyak" />
-        <DisplayName>MyIntellisenseTest1</DisplayName>
+        <Identity Id="NP.XAMLIntellisenseExtensionForVS2017.9c3d92c1-cbae-4738-a2f2-1e48eab3f15a" Version="1.0" Language="en-US" Publisher="Nick Polyak" />
+        <DisplayName>NP.XAMLIntellisenseExtensionForVS2017</DisplayName>
         <Description>Empty VSIX Project.</Description>
     </Metadata>
     <Installation>

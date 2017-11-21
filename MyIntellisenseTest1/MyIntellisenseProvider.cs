@@ -11,7 +11,7 @@ using Microsoft.VisualStudio.Utilities;
 using System.Collections.ObjectModel;
 using System.Windows;
 
-namespace MyIntellisenseTest1
+namespace NP.XAMLIntellisenseExtensionForVS2017
 {
     [Export(typeof(IIntellisensePresenterProvider))]
     [ContentType("XAML")]

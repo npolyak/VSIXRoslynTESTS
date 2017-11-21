@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace MyIntellisenseTest1
+namespace NP.XAMLIntellisenseExtensionForVS2017
 {
     public class ResendEventBehavior
     {

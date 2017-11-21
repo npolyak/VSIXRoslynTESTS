@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyIntellisenseTest1", "MyIntellisenseTest1.csproj", "{20C39D0A-9D5A-45E6-BFD4-D9B37380D86C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NP.XAMLIntellisenseExtensionForVS2017", "NP.XAMLIntellisenseExtensionForVS2017.csproj", "{20C39D0A-9D5A-45E6-BFD4-D9B37380D86C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

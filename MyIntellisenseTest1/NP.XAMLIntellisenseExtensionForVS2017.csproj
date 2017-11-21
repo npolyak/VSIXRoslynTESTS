@@ -45,7 +45,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CompletionFilter.cs" />
-    <Compile Include="MyIntellisensePresenter.cs" />
     <Compile Include="MyIntellisensePresenterUI.xaml.cs">
       <DependentUpon>MyIntellisensePresenterUI.xaml</DependentUpon>
     </Compile>

@@ -19,7 +19,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Threading;
 
-namespace MyIntellisenseTest1
+namespace NP.XAMLIntellisenseExtensionForVS2017
 {
     /// <summary>
     /// Interaction logic for MyIntellisensePresenterUI.xaml
@@ -259,8 +259,15 @@ namespace MyIntellisenseTest1
             {
                 if (_completionSession.SelectedCompletionSet != null)
                 {
-                    _completionSession.SelectedCompletionSet.SelectionStatus =
-                         new CompletionSelectionStatus(selectedItem as Completion, true, true);
+                    try
+                    {
+                        // sometimes it throws an unclear exception
+                        // so placed it within try/catch block
+                        _completionSession.SelectedCompletionSet.SelectionStatus =
+                             new CompletionSelectionStatus(selectedItem as Completion, true, true);
+                    }
+                    catch
+                    { }
                 }
 
             }
