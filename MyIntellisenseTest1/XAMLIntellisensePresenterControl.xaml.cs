@@ -24,7 +24,7 @@ namespace NP.XAMLIntellisenseExtensionForVS2017
     /// <summary>
     /// Interaction logic for MyIntellisensePresenterUI.xaml
     /// </summary>
-    public partial class MyIntellisensePresenterUI : UserControl, IPopupIntellisensePresenter, IIntellisenseCommandTarget
+    public partial class XAMLIntellisensePresenterControl : UserControl, IPopupIntellisensePresenter, IIntellisenseCommandTarget
     {
         ICompletionSession _completionSession;
 
@@ -89,7 +89,7 @@ namespace NP.XAMLIntellisenseExtensionForVS2017
 
         public ObservableCollection<CompletionFilter> TheCompletionFilters { get; }
 
-        public MyIntellisensePresenterUI(ICompletionSession completionSession)
+        public XAMLIntellisensePresenterControl(ICompletionSession completionSession)
         {
             _completionSession = completionSession;
 

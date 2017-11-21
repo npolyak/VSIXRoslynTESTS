@@ -45,10 +45,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CompletionFilter.cs" />
-    <Compile Include="MyIntellisensePresenterUI.xaml.cs">
-      <DependentUpon>MyIntellisensePresenterUI.xaml</DependentUpon>
+    <Compile Include="XAMLIntellisensePresenterControl.xaml.cs">
+      <DependentUpon>XAMLIntellisensePresenterControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MyIntellisenseProvider.cs" />
+    <Compile Include="XAMLIntellisenseProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResendEventBehavior.cs" />
   </ItemGroup>
@@ -74,7 +74,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="MyIntellisensePresenterUI.xaml">
+    <Page Include="XAMLIntellisensePresenterControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

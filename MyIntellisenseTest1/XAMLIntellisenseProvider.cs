@@ -17,8 +17,8 @@ namespace NP.XAMLIntellisenseExtensionForVS2017
     [ContentType("XAML")]
     //[ContentType("CSharp")]
     [Order(Before = "default")]
-    [Name("My Intellisense Presenter")]
-    public class MyIntellisenseProvider : IIntellisensePresenterProvider
+    [Name("XAML Intellisense Extension")]
+    public class XAMLIntellisensePresenterProvider : IIntellisensePresenterProvider
     {
         public IIntellisensePresenter TryCreateIntellisensePresenter(IIntellisenseSession session)
         {
@@ -36,7 +36,7 @@ namespace NP.XAMLIntellisenseExtensionForVS2017
             if (allCompletions.Count() == 0)
                 return null;
 
-            return new MyIntellisensePresenterUI(completionSession);
+            return new XAMLIntellisensePresenterControl(completionSession);
         }
     }
 }
