@@ -41,9 +41,9 @@ namespace IntellisenseUI
 
         public void ScrollIntoView()
         {
-            TheCompletionsList.ScrollIntoView(TheCompletionsList.SelectedItem);
+            //TheCompletionsList.ScrollIntoView(TheCompletionsList.SelectedItem);
 
-            TheCompletionsList.Focus();
+            //TheCompletionsList.Focus();
         }
     }
 }

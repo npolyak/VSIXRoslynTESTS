@@ -16,7 +16,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <TextBox Text="{Binding Path=TheStringToComplete, 
+<TextBox Text="{Binding Path=TheStringToComplete, 
                                     Mode=TwoWay,
                                     UpdateSourceTrigger=PropertyChanged}"
                      HorizontalAlignment="Stretch"
@@ -31,10 +31,18 @@
                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                       Width="300"
                       Height="70">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment"
+                                Value="Stretch"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Path=Text}"
+                        <Grid Background="Orange">
+                            <TextBlock Text="{Binding Path=Text}"
                                    Margin="5,3,20,3"/>
+                        </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
