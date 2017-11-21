@@ -17,7 +17,7 @@ namespace NP.XAMLIntellisenseExtensionForVS2017
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
 
-        public string CompletionFilterKind { get; private set; }
+        public string CompletionFilterKind { get; }
 
         public ImageSource TheIcon { get; }
 
