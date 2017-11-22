@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace NP.XAMLIntellisenseExtensionForVS2017
 {
-    public class CompletionFilter : INotifyPropertyChanged
+    public class CompletionTypeFilter : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -17,7 +17,7 @@ namespace NP.XAMLIntellisenseExtensionForVS2017
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
 
-        public string CompletionFilterKind { get; }
+        public string CompletionFilterType { get; }
 
         public ImageSource TheIcon { get; }
 
@@ -44,9 +44,9 @@ namespace NP.XAMLIntellisenseExtensionForVS2017
         #endregion IsOn Property
 
 
-        public CompletionFilter(string completionFilterKind, ImageSource icon)
+        public CompletionTypeFilter(string completionFilterType, ImageSource icon)
         {
-            CompletionFilterKind = completionFilterKind;
+            CompletionFilterType = completionFilterType;
             TheIcon = icon.Clone();
         }
     }

@@ -44,7 +44,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CompletionFilter.cs" />
+    <Compile Include="CompletionTypeFilter.cs" />
     <Compile Include="XAMLIntellisensePresenterControl.xaml.cs">
       <DependentUpon>XAMLIntellisensePresenterControl.xaml</DependentUpon>
     </Compile>

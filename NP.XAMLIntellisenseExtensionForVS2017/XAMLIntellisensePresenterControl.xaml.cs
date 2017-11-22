@@ -29,15 +29,14 @@ namespace NP.XAMLIntellisenseExtensionForVS2017
         IPopupIntellisensePresenter, 
         IIntellisenseCommandTarget
     {
-        ICompletionSession _completionSession;
-
+        #region IPopupIntellisensePresenter_Properties_Implementation
 #pragma warning disable 0067
         public event EventHandler SurfaceElementChanged;
         public event EventHandler PresentationSpanChanged;
         public event EventHandler<ValueChangedEventArgs<PopupStyles>> PopupStylesChanged;
 #pragma warning restore 0067
 
-        public IIntellisenseSession Session => _completionSession;
+        public IIntellisenseSession Session => CompletionSession;
 
         public UIElement SurfaceElement => this;
 
@@ -47,26 +46,26 @@ namespace NP.XAMLIntellisenseExtensionForVS2017
             get
             {
                 SnapshotSpan span = 
-                    this._completionSession
+                    this.CompletionSession
                             .SelectedCompletionSet
                             .ApplicableTo
                             .GetSpan
                             (
-                                this._completionSession.TextView.TextSnapshot
+                                this.CompletionSession.TextView.TextSnapshot
                             );
 
                 NormalizedSnapshotSpanCollection spans = 
-                    this._completionSession
+                    this.CompletionSession
                             .TextView
                             .BufferGraph
                             .MapUpToBuffer
                             (
                                 span, 
-                                this._completionSession
+                                this.CompletionSession
                                         .SelectedCompletionSet
                                         .ApplicableTo
                                         .TrackingMode, 
-                                this._completionSession.TextView.TextBuffer);
+                                this.CompletionSession.TextView.TextBuffer);
                 if (spans.Count <= 0)
                 {
                     throw new InvalidOperationException
@@ -78,7 +77,7 @@ It doesn't map to a span in the session's text view."
                 SnapshotSpan span2 = spans[0];
 
                 return 
-                    this._completionSession
+                    this.CompletionSession
                             .TextView
                             .TextBuffer
                             .CurrentSnapshot
@@ -92,68 +91,157 @@ It doesn't map to a span in the session's text view."
         }
 
         public string SpaceReservationManagerName => "completion";
+        #endregion IPopupIntellisensePresenter_Properties_Implementation
 
-        public ObservableCollection<Completion> AllCompletions { get; set; }
+        // Completion Session
+        public ICompletionSession CompletionSession { get; }
 
+        // collection view that facilitates filtering
+        // of the completions collection
         public ICollectionView TheCompletionsCollectionView { get; }
 
-        public ObservableCollection<CompletionFilter> TheCompletionFilters { get; }
+        // View Model collection of the completion filters
+        public ObservableCollection<CompletionTypeFilter> 
+            TheCompletionTypeFilters { get; }
+
+        // The text being typed by the user. 
+        // It is used for filtering the completion result set. 
+        public string UserText =>
+            CompletionSession
+                .SelectedCompletionSet
+                ?.ApplicableTo
+                    .GetText
+                    (
+                        CompletionSession.SelectedCompletionSet
+                                            .ApplicableTo
+                                            .TextBuffer
+                                            .CurrentSnapshot)?.ToLower();
 
         public XAMLIntellisensePresenterControl(ICompletionSession completionSession)
         {
-            _completionSession = completionSession;
+            CompletionSession = completionSession;
 
-            _completionSession.TextView.TextBuffer.Changed += TextBuffer_Changed;
-            _completionSession.Dismissed += _completionSession_Dismissed;
+            CompletionSession.Dismissed +=
+                _completionSession_Dismissed;
 
-            ReadOnlyObservableCollection<CompletionSet> completionSets =
-                completionSession.CompletionSets;
-
+            // get all completions 
+            // this set does not change throughout the session
             IEnumerable<Completion>
-                allCompletions = completionSets.SelectMany(completionSet => completionSet.Completions);
+                allCompletions = 
+                    completionSession.SelectedCompletionSet
+                                     .Completions
+                                     .ToList();
 
-            this.AllCompletions = new ObservableCollection<Completion>(allCompletions);
+            // create the ICollectionView object
+            // in order to facilitate the filtering of the
+            // completions
+            TheCompletionsCollectionView =
+                CollectionViewSource.GetDefaultView(allCompletions);
 
-            TheCompletionsCollectionView = CollectionViewSource.GetDefaultView(AllCompletions);
-
-            TheCompletionFilters = new ObservableCollection<CompletionFilter>
+            // create a single filter for each IconAutomationText
+            TheCompletionTypeFilters = new ObservableCollection<CompletionTypeFilter>
             (
                 allCompletions
                 .GroupBy(compl => compl.IconAutomationText)
                 .Where(groupItem => groupItem.Key != "9") // completion tag (gets automatically added)
-                .Select(groupItem => new CompletionFilter(groupItem.Key, groupItem.First().IconSource.Clone()))
+                .Select
+                (
+                    groupItem => 
+                        new CompletionTypeFilter
+                        (
+                            groupItem.Key, 
+                            groupItem.First()
+                                     .IconSource
+                                     .Clone()))
             );
 
-            if (TheCompletionFilters.Count == 1)
+            // there is no reason to have a single filter
+            // changing it will show or hide 
+            // all the completions
+            if (TheCompletionTypeFilters.Count == 1)
             {
-                TheCompletionFilters.Clear();
+                TheCompletionTypeFilters.Clear();
             }
 
-            foreach(CompletionFilter filter in TheCompletionFilters)
+            // set the filtering delegate
+            // to DoFiltering method that filters
+            // a completion by user text and by and by 
+            // the completion type filters which are in 
+            // 'On' state. 
+            TheCompletionsCollectionView.Filter = DoFiltering;
+
+            // set the completion status to 
+            // the current completion every time 
+            // the Current item changes with the 
+            // collection view
+            TheCompletionsCollectionView.CurrentChanged +=
+                TheCompletionsCollectionView_CurrentChanged;
+
+            // force refreshing of the view
+            // each time any filter's state changes
+            foreach (CompletionTypeFilter filter in TheCompletionTypeFilters)
             {
                 filter.PropertyChanged += Filter_PropertyChanged;
             }
-
-            TheCompletionsCollectionView.Filter = Filter;
-
-            TheCompletionsCollectionView.CurrentChanged += TheCompletionsCollectionView_CurrentChanged;
 
             InitializeComponent();
 
             SelectItemBasedOnTextFiltering();
 
+            // when user text changes,
+            // re-filter and (possibly)
+            // choose another Completion item for
+            // the CompletionStatus of the session
+            CompletionSession.TextView.TextBuffer.Changed +=
+                TextBuffer_Changed;
+
+            // select the Completion item corresponding
+            // to the clicked ListViewItem
             this.AddHandler
             (
                 ResendEventBehavior.CustomEvent, 
                 (RoutedEventHandler) TheCompletionsListView_MouseDown
             );
 
-            TheCompletionsListView.MouseDoubleClick += TheCompletionsListView_MouseDoubleClick;
+            // commit the session
+            TheCompletionsListView.MouseDoubleClick += 
+                TheCompletionsListView_MouseDoubleClick;
         }
 
-        private void TheCompletionsCollectionView_CurrentChanged(object sender, EventArgs e)
+        // set the SelectionStatus to the 
+        // current item of the CollectionView
+        private void TheCompletionsCollectionView_CurrentChanged
+        (
+            object sender, 
+            EventArgs e
+        )
         {
-            SetCompletionStatus();
+            object selectedItem =
+                TheCompletionsCollectionView.CurrentItem;
+
+            if (selectedItem != null)
+            {
+                if (CompletionSession.SelectedCompletionSet != null)
+                {
+                    try
+                    {
+                        // sometimes it throws an unclear exception
+                        // so placed it within try/catch block
+                        CompletionSession
+                            .SelectedCompletionSet
+                            .SelectionStatus =
+                                new CompletionSelectionStatus
+                                (
+                                    selectedItem as Completion, 
+                                    true, 
+                                    true
+                                );
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
         }
 
         private void TheCompletionsListView_MouseDown(object sender, RoutedEventArgs e)
@@ -173,45 +261,40 @@ It doesn't map to a span in the session's text view."
 
         private void TheCompletionsListView_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            _completionSession?.Commit();
+            CompletionSession?.Commit();
         }
 
-        public string UserText =>
-            _completionSession
-                .SelectedCompletionSet?.ApplicableTo
-                                       .GetText
-                                        (
-                                            _completionSession.SelectedCompletionSet
-                                                              .ApplicableTo
-                                                              .TextBuffer
-                                                               .CurrentSnapshot)?.ToLower();
-
+        // force refiltering of the CollectionView
         private void Filter_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             TheCompletionsCollectionView.Refresh();
         }
 
-        bool Filter(object obj)
+        // filter a completion first by UserText and 
+        // then by completion filters
+        bool DoFiltering(object obj)
         {
             Completion completion = (Completion) obj;
 
             string userText = UserText;
 
-            IEnumerable<CompletionFilter> completionFiltersThatAreOn =
-                TheCompletionFilters.Where(filt => filt.IsOn).ToList();
-
+            // filter by user text (if text does not match return 'false')
             if ((userText != null) && (completion.DisplayText?.ToLower()?.Contains(userText) != true))
                 return false;
 
+            IEnumerable<CompletionTypeFilter> completionFiltersThatAreOn =
+                TheCompletionTypeFilters.Where(filt => filt.IsOn).ToList();
+
+            // filter by completion filters that are in 'On' state
             return
                 (completionFiltersThatAreOn.Count() == 0) ||  
-                completionFiltersThatAreOn.FirstOrDefault(filt => filt.CompletionFilterKind == completion.IconAutomationText) != null;
+                completionFiltersThatAreOn.FirstOrDefault(filt => filt.CompletionFilterType == completion.IconAutomationText) != null;
         }
 
         private void _completionSession_Dismissed(object sender, EventArgs e)
         {
-            _completionSession.TextView.TextBuffer.Changed -= TextBuffer_Changed;
-            _completionSession.Dismissed -= _completionSession_Dismissed;
+            CompletionSession.TextView.TextBuffer.Changed -= TextBuffer_Changed;
+            CompletionSession.Dismissed -= _completionSession_Dismissed;
         }
 
         void SelectItem(Completion completionItem)
@@ -223,25 +306,32 @@ It doesn't map to a span in the session's text view."
         {
             string userText = UserText;
 
-            bool moved = false;
+            bool foundCompletion = false;
+            // if we find completion that starts with the text
+            // we choose it. 
             if (!string.IsNullOrEmpty(userText))
             {
                 foreach (Completion completion in TheCompletionsCollectionView)
                 {
                     if (completion.DisplayText?.ToLower().StartsWith(userText) == true)
                     {
-                        TheCompletionsCollectionView.MoveCurrentTo(completion);
-                        moved = true;
+                        SelectItem(completion);
+                        foundCompletion = true;
                         break;
                     }
                 }
             }
 
-            if (!moved)
+            // if the match by text was not found
+            // we move the current item to the first of
+            // items within the filtered collection
+            if (!foundCompletion)
             {
                 TheCompletionsCollectionView.MoveCurrentToFirst();
             }
 
+            // we force the ListView to scroll to the 
+            // current item
             ScrollAsync();
         }
 
@@ -261,32 +351,12 @@ It doesn't map to a span in the session's text view."
             }
         }
 
-        void SetCompletionStatus()
-        {
-            object selectedItem = TheCompletionsCollectionView.CurrentItem;
-
-            if (selectedItem != null)
-            {
-                if (_completionSession.SelectedCompletionSet != null)
-                {
-                    try
-                    {
-                        // sometimes it throws an unclear exception
-                        // so placed it within try/catch block
-                        _completionSession.SelectedCompletionSet.SelectionStatus =
-                             new CompletionSelectionStatus(selectedItem as Completion, true, true);
-                    }
-                    catch
-                    { }
-                }
-
-            }
-        }
-
         private void TextBuffer_Changed(object sender, TextContentChangedEventArgs e)
         {
+            // refresh the filter
             TheCompletionsCollectionView.Refresh();
 
+            // choose the CompletionStatus based on the new filtering
             SelectItemBasedOnTextFiltering();
         }
 
@@ -295,27 +365,26 @@ It doesn't map to a span in the session's text view."
             switch (command)
             {
                 case IntellisenseKeyboardCommand.Up:
-                    MoveCompletionByIdx(-1);
+                    MoveCurrentByIdx(-1);
                     return true;
                 case IntellisenseKeyboardCommand.PageUp:
-                    MoveCompletionByIdx(-10);
+                    MoveCurrentByIdx(-10);
                     return true;
                 case IntellisenseKeyboardCommand.Down:
-                    MoveCompletionByIdx(1);
+                    MoveCurrentByIdx(1);
                     return true;
                 case IntellisenseKeyboardCommand.PageDown:
-                    MoveCompletionByIdx(10);
+                    MoveCurrentByIdx(10);
                     return true;
                 case IntellisenseKeyboardCommand.Escape:
-                    if (!this.Session.IsDismissed)
-                        this.Session.Dismiss();
+                    this.CompletionSession.Dismiss();
                     return true;
                 default:
                     return false;
             }
         }
 
-        private void MoveCompletionByIdx(int relativeIndex)
+        private void MoveCurrentByIdx(int relativeIndex)
         {
             int newPosition = TheCompletionsCollectionView.CurrentPosition + relativeIndex;
 
