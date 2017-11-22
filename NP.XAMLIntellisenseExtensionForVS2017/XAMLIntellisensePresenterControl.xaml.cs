@@ -24,7 +24,10 @@ namespace NP.XAMLIntellisenseExtensionForVS2017
     /// <summary>
     /// Interaction logic for MyIntellisensePresenterUI.xaml
     /// </summary>
-    public partial class XAMLIntellisensePresenterControl : UserControl, IPopupIntellisensePresenter, IIntellisenseCommandTarget
+    public partial class XAMLIntellisensePresenterControl :
+        UserControl, 
+        IPopupIntellisensePresenter, 
+        IIntellisenseCommandTarget
     {
         ICompletionSession _completionSession;
 
@@ -59,11 +62,18 @@ namespace NP.XAMLIntellisenseExtensionForVS2017
                             .MapUpToBuffer
                             (
                                 span, 
-                                this._completionSession.SelectedCompletionSet.ApplicableTo.TrackingMode, 
+                                this._completionSession
+                                        .SelectedCompletionSet
+                                        .ApplicableTo
+                                        .TrackingMode, 
                                 this._completionSession.TextView.TextBuffer);
                 if (spans.Count <= 0)
                 {
-                    throw new InvalidOperationException("Completion Session Applicable-To Span is invalid.  It doesn't map to a span in the session's text view.");
+                    throw new InvalidOperationException
+                    (
+                        @"Completion Session Applicable-To Span is invalid.  
+It doesn't map to a span in the session's text view."
+                    );
                 }
                 SnapshotSpan span2 = spans[0];
 

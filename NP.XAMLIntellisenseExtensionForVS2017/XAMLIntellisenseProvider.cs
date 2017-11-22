@@ -15,26 +15,27 @@ namespace NP.XAMLIntellisenseExtensionForVS2017
 {
     [Export(typeof(IIntellisensePresenterProvider))]
     [ContentType("XAML")]
-    //[ContentType("CSharp")]
     [Order(Before = "default")]
     [Name("XAML Intellisense Extension")]
-    public class XAMLIntellisensePresenterProvider : IIntellisensePresenterProvider
+    public class XAMLIntellisensePresenterProvider : 
+        IIntellisensePresenterProvider
     {
-        public IIntellisensePresenter TryCreateIntellisensePresenter(IIntellisenseSession session)
+        public IIntellisensePresenter 
+            TryCreateIntellisensePresenter(IIntellisenseSession session)
         {
             ICompletionSession completionSession = session as ICompletionSession;
 
-            ReadOnlyObservableCollection<CompletionSet> completionSets =
-                completionSession.CompletionSets;
+            CompletionSet completionSet = completionSession.SelectedCompletionSet;
 
-            if (completionSets == null)
+            IEnumerable<Completion>
+                allCompletions = completionSet?.Completions.ToList();
+
+            if ( (allCompletions == null) || 
+                 (allCompletions.Count() == 0) )
+            {
+                // ensures default behavior if there are no completions
                 return null;
-
-            IEnumerable<Completion> 
-                allCompletions = completionSets.SelectMany(completionSet => completionSet.Completions);
-
-            if (allCompletions.Count() == 0)
-                return null;
+            }
 
             return new XAMLIntellisensePresenterControl(completionSession);
         }
